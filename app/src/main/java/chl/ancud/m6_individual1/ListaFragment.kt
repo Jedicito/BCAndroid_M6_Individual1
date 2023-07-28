@@ -6,6 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import chl.ancud.m6_individual1.databinding.FragmentListaBinding
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,9 +24,11 @@ private const val ARG_PARAM2 = "param2"
  */
 class ListaFragment : Fragment() {
 
+    lateinit var binding: FragmentListaBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -29,8 +36,28 @@ class ListaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista, container, false)
+        binding = FragmentListaBinding.inflate(layoutInflater, container, false)
+        loadTareas()
+        return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun loadTareas() {
+        GlobalScope.launch {
+            val tareas = getDao().getTareas()
+            val tareastexto = tareas.joinToString("\n") { it.nombre }
+            showTareas(tareastexto)
+        }
+    }
+
+    private suspend fun showTareas(tareas: String) {
+        withContext(Dispatchers.Main){
+            binding.tvMostrarLista.text = tareas
+        }
+    }
+
+    private fun getDao(): TareaDao {
+        return  TareaBaseDatos.getDatabase(this.requireContext()).getTaskDao()
+    }
 
 }

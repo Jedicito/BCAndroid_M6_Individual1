@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import chl.ancud.m6_individual1.databinding.FragmentAgregarBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -45,6 +46,8 @@ class AgregarFragment : Fragment() {
         binding.btIngresar.setOnClickListener {
             val texto = binding.etIngreso.text.toString()
             saveTarea(texto)
+            Toast.makeText(context, "$texto guardado", Toast.LENGTH_SHORT).show()
+            binding.etIngreso.text.clear()
         }
     }
 
@@ -54,6 +57,7 @@ class AgregarFragment : Fragment() {
         val tarea = Tarea(texto)
         GlobalScope.launch {  dao.insertarTarea(tarea) }
     }
+
 
 
 }
