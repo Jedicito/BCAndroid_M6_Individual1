@@ -43,17 +43,15 @@ class ListaFragment : Fragment() {
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun loadTareas() {
-        GlobalScope.launch {
-            val tareas = getDao().getTareas()
-            val tareastexto = tareas.joinToString("\n") { it.nombre }
-            showTareas(tareastexto)
+        val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
+        val tareas = dao.getTareas().observe(requireActivity()){
+            val tareasTexto = it.joinToString("\n") { it.nombre }
+            showTareas(tareasTexto)
         }
     }
 
-    private suspend fun showTareas(tareas: String) {
-        withContext(Dispatchers.Main){
-            binding.tvMostrarLista.text = tareas
-        }
+    private fun showTareas(tareas: String) {
+        binding.tvMostrarLista.text = tareas
     }
 
     private fun getDao(): TareaDao {
