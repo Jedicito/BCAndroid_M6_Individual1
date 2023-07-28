@@ -25,10 +25,10 @@ private const val ARG_PARAM2 = "param2"
 class ListaFragment : Fragment() {
 
     lateinit var binding: FragmentListaBinding
+    lateinit var repositorio: Repositorio
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -37,14 +37,17 @@ class ListaFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentListaBinding.inflate(layoutInflater, container, false)
+        initRepositorio()
         loadTareas()
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
+    private fun initRepositorio() {
+        repositorio = Repositorio(TareaBaseDatos.getDatabase(requireContext()).getTaskDao())
+    }
+
     private fun loadTareas() {
-        val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
-        val tareas = dao.getTareas().observe(requireActivity()){
+        repositorio.listTareas().observe(requireActivity()){
             val tareasTexto = it.joinToString("\n") { it.nombre }
             showTareas(tareasTexto)
         }
@@ -52,10 +55,6 @@ class ListaFragment : Fragment() {
 
     private fun showTareas(tareas: String) {
         binding.tvMostrarLista.text = tareas
-    }
-
-    private fun getDao(): TareaDao {
-        return  TareaBaseDatos.getDatabase(this.requireContext()).getTaskDao()
     }
 
 }

@@ -7,7 +7,7 @@ class Repositorio(private val tareaDao: TareaDao) {
         tareaDao.insertarTarea(tarea)
     }
 
-    fun listarTareas(): LiveData<List<Tarea>> {
+    fun listTareas(): LiveData<List<Tarea>> {
         return tareaDao.getTareas()
     }
 }

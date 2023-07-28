@@ -24,6 +24,7 @@ private const val ARG_PARAM2 = "param2"
 class AgregarFragment : Fragment() {
 
     lateinit var binding: FragmentAgregarBinding
+    lateinit var repositorio: Repositorio
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,14 @@ class AgregarFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentAgregarBinding.inflate(layoutInflater, container, false)
 
+        initRepositorio()
         initListener()
 
         return binding.root
+    }
+
+    private fun initRepositorio() {
+        repositorio = Repositorio(TareaBaseDatos.getDatabase(requireContext()).getTaskDao())
     }
 
     private fun initListener() {
@@ -55,7 +61,7 @@ class AgregarFragment : Fragment() {
     private fun saveTarea(texto: String) {
         val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
         val tarea = Tarea(texto)
-        GlobalScope.launch {  dao.insertarTarea(tarea) }
+        GlobalScope.launch {  repositorio.insertTarea(tarea) }
     }
 
 
