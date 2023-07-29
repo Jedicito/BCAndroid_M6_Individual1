@@ -17,7 +17,7 @@ class TareaViewModel(aplicacion: Application): AndroidViewModel(aplicacion) {
         return repositorio.listTareas()
     }
 
-    fun insertarTareas(tarea: Tarea) = viewModelScope.launch {
+    fun insertarTarea(tarea: Tarea) = viewModelScope.launch {
         repositorio.insertTarea(tarea)
     }
 }

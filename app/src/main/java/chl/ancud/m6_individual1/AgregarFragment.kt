@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import chl.ancud.m6_individual1.databinding.FragmentAgregarBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -24,7 +25,8 @@ private const val ARG_PARAM2 = "param2"
 class AgregarFragment : Fragment() {
 
     lateinit var binding: FragmentAgregarBinding
-    lateinit var repositorio: Repositorio
+    //lateinit var repositorio: Repositorio
+    private val tareaViewModel: TareaViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,15 +40,15 @@ class AgregarFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentAgregarBinding.inflate(layoutInflater, container, false)
 
-        initRepositorio()
+        //initRepositorio()
         initListener()
 
         return binding.root
     }
 
-    private fun initRepositorio() {
+    /*private fun initRepositorio() {
         repositorio = Repositorio(TareaBaseDatos.getDatabase(requireContext()).getTaskDao())
-    }
+    }*/
 
     private fun initListener() {
         binding.btIngresar.setOnClickListener {
@@ -61,7 +63,7 @@ class AgregarFragment : Fragment() {
     private fun saveTarea(texto: String) {
         val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
         val tarea = Tarea(texto)
-        GlobalScope.launch {  repositorio.insertTarea(tarea) }
+        tareaViewModel.insertarTarea(tarea)
     }
 
 

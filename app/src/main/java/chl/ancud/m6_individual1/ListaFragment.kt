@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import chl.ancud.m6_individual1.databinding.FragmentListaBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,8 @@ private const val ARG_PARAM2 = "param2"
 class ListaFragment : Fragment() {
 
     lateinit var binding: FragmentListaBinding
-    lateinit var repositorio: Repositorio
+    //lateinit var repositorio: Repositorio
+    private val tareaViewModel: TareaViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,17 +39,17 @@ class ListaFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentListaBinding.inflate(layoutInflater, container, false)
-        initRepositorio()
+        //initRepositorio()
         loadTareas()
         return binding.root
     }
 
-    private fun initRepositorio() {
+    /*private fun initRepositorio() {
         repositorio = Repositorio(TareaBaseDatos.getDatabase(requireContext()).getTaskDao())
-    }
+    }*/
 
     private fun loadTareas() {
-        repositorio.listTareas().observe(requireActivity()){
+        tareaViewModel.listarTareas().observe(requireActivity()){
             val tareasTexto = it.joinToString("\n") { it.nombre }
             showTareas(tareasTexto)
         }
